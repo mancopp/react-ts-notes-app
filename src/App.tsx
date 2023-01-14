@@ -7,6 +7,7 @@ import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Prev } from "react-bootstrap/esm/PageItem";
+import NoteList from "./components/NoteList";
 
 export type Note = {
   id: string;
@@ -62,7 +63,10 @@ function App() {
   return (
     <Container className="my-5">
       <Routes>
-        <Route path="/" element={<h1>home</h1>} />
+        <Route
+          path="/"
+          element={<NoteList notes={noteWithTags} availableTags={tags} />}
+        />
         <Route
           path="/new"
           element={
