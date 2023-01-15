@@ -1,11 +1,12 @@
 import React, { FormEvent } from "react";
 import { useState } from "react";
 import { useRef } from "react";
-import { Button, Col, Form, Row, Stack } from "react-bootstrap";
+import { Button, Card, Col, Form, Row, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Creatable from "react-select/creatable";
 import { NoteData, Tag } from "../App";
 import { v4 as uuidv4 } from "uuid";
+import ReactMarkdown from "react-markdown";
 
 type NoteFormProps = {
   onSubmit: (data: NoteData) => void;
@@ -23,6 +24,7 @@ export default function NoteForm({
 }: NoteFormProps) {
   const titleRef = useRef<HTMLInputElement>(null);
   const noteContentRef = useRef<HTMLTextAreaElement>(null);
+  const [noteContent, setNoteContent] = useState<string>(content);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
   const navigate = useNavigate();
 
@@ -80,19 +82,29 @@ export default function NoteForm({
         </Row>
         <Row>
           <Col>
-            <Form.Group controlId="note-content">
-              <Form.Label>Content</Form.Label>
+            <Form.Group controlId="note-content" className="h-100">
+              <Form.Label>Markdown</Form.Label>
               <Form.Control
+                className="h-100"
                 required
                 as="textarea"
                 ref={noteContentRef}
                 rows={10}
                 defaultValue={content}
+                onChange={(e) => {
+                  setNoteContent(e.target.value);
+                }}
               ></Form.Control>
             </Form.Group>
           </Col>
+          <Col>
+            <Form.Label>Preview</Form.Label>
+            <ReactMarkdown className="border rounded">
+              {noteContent}
+            </ReactMarkdown>
+          </Col>
         </Row>
-        <Stack direction="horizontal" gap={2}>
+        <Stack direction="horizontal" gap={2} className="mt-4">
           <Button type="submit" variant="primary">
             Save
           </Button>
