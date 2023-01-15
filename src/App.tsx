@@ -54,6 +54,22 @@ function App() {
     setTags((prev) => [...prev, tag]);
   }
 
+  function updateTag(id: string, label: string) {
+    setTags((prev) =>
+      prev.map((tag) => {
+        if (tag.id === id) {
+          return { ...tag, label };
+        } else {
+          return tag;
+        }
+      })
+    );
+  }
+
+  function deleteTag(id: string) {
+    setTags((prev) => prev.filter((tag) => tag.id !== id));
+  }
+
   function createNote({ tags, ...data }: NoteData) {
     setRawNotes((prev) => {
       return [
@@ -90,7 +106,14 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<NoteList notes={noteWithTags} availableTags={tags} />}
+          element={
+            <NoteList
+              notes={noteWithTags}
+              availableTags={tags}
+              updateTag={updateTag}
+              deleteTag={deleteTag}
+            />
+          }
         />
         <Route
           path="/new"
@@ -103,7 +126,7 @@ function App() {
           }
         />
         <Route path="/:id" element={<NoteLayout notes={noteWithTags} />}>
-          <Route index element={<Note onDeleteNote={(onDeleteNote = {})} />} />
+          <Route index element={<Note onDeleteNote={onDeleteNote} />} />
           <Route
             path="edit"
             element={
